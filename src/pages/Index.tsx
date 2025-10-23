@@ -7,27 +7,6 @@ import Icon from '@/components/ui/icon';
 
 export default function Index() {
   const [activeSection, setActiveSection] = useState('home');
-  const [isDownloading, setIsDownloading] = useState(false);
-
-  const downloadPDF = async () => {
-    setIsDownloading(true);
-    try {
-      const response = await fetch('https://functions.poehali.dev/218f1a56-5530-4977-87fb-1b83e32d3eeb');
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'flower-shop-prototype.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
@@ -36,155 +15,226 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-secondary/20 to-white">
-      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-border">
+    <div className="min-h-screen bg-background">
+      <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-border shadow-sm">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-primary">Flower Shop</h1>
-            <div className="hidden md:flex gap-6 items-center">
-              <Button 
-                onClick={downloadPDF} 
-                disabled={isDownloading}
-                variant="outline" 
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <Icon name={isDownloading ? 'Loader2' : 'Download'} className={`w-4 h-4 ${isDownloading ? 'animate-spin' : ''}`} />
-                {isDownloading ? 'Загрузка...' : 'Скачать PDF'}
-              </Button>
-              {['home', 'about', 'catalog', 'gallery', 'reviews', 'team', 'delivery', 'contacts'].map((section) => (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <Icon name="Palette" className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <h1 className="text-2xl font-bold text-foreground">ArtStudio</h1>
+            </div>
+            <div className="hidden md:flex gap-8">
+              {['home', 'about', 'courses', 'gallery', 'teachers', 'reviews', 'contacts'].map((section) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    activeSection === section ? 'text-primary' : 'text-foreground/60'
+                  className={`text-sm font-semibold transition-colors hover:text-primary ${
+                    activeSection === section ? 'text-primary' : 'text-foreground/70'
                   }`}
                 >
                   {section === 'home' && 'Главная'}
-                  {section === 'about' && 'О нас'}
-                  {section === 'catalog' && 'Каталог'}
+                  {section === 'about' && 'О студии'}
+                  {section === 'courses' && 'Курсы'}
                   {section === 'gallery' && 'Галерея'}
+                  {section === 'teachers' && 'Преподаватели'}
                   {section === 'reviews' && 'Отзывы'}
-                  {section === 'team' && 'Команда'}
-                  {section === 'delivery' && 'Доставка'}
                   {section === 'contacts' && 'Контакты'}
                 </button>
               ))}
             </div>
+            <Button onClick={() => scrollToSection('contacts')} className="hidden md:flex">
+              Записаться
+            </Button>
           </div>
         </nav>
       </header>
 
       <main className="pt-16">
-        <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10" />
+        <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/10">
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url(https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/f6836e50-c804-4841-b51a-81c7ab085a58.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
           <div className="container mx-auto px-4 py-20 relative z-10">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6 animate-fade-in">
-                <h2 className="text-5xl md:text-6xl font-bold leading-tight">
-                  Цветочная<br />
-                  <span className="text-primary">Коллекция</span>
-                </h2>
-                <p className="text-lg text-muted-foreground">
-                  Создаём букеты, которые дарят радость и тепло. Свежие цветы каждый день.
-                </p>
-                <div className="flex gap-4">
-                  <Button size="lg" onClick={() => scrollToSection('catalog')} className="bg-primary hover:bg-primary/90">
-                    Смотреть каталог
-                  </Button>
-                  <Button size="lg" variant="outline" onClick={() => scrollToSection('contacts')}>
-                    Связаться с нами
-                  </Button>
+            <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
+              <div className="inline-block px-4 py-2 bg-primary/10 rounded-full mb-4">
+                <span className="text-primary font-semibold text-sm">Творчество • Искусство • Вдохновение</span>
+              </div>
+              <h2 className="text-5xl md:text-7xl font-bold leading-tight">
+                Откройте мир<br />
+                <span className="text-primary">изобразительного искусства</span>
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                Профессиональное обучение рисованию для детей и взрослых. 
+                Развиваем талант и творческое мышление в атмосфере вдохновения.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Button size="lg" onClick={() => scrollToSection('courses')} className="text-lg">
+                  <Icon name="Brush" className="w-5 h-5 mr-2" />
+                  Наши курсы
+                </Button>
+                <Button size="lg" variant="outline" onClick={() => scrollToSection('contacts')} className="text-lg">
+                  <Icon name="Calendar" className="w-5 h-5 mr-2" />
+                  Записаться на пробное занятие
+                </Button>
+              </div>
+              <div className="grid grid-cols-3 gap-8 pt-12 max-w-2xl mx-auto">
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold text-primary">8+</div>
+                  <div className="text-sm text-muted-foreground">лет опыта</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold text-primary">500+</div>
+                  <div className="text-sm text-muted-foreground">учеников</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold text-primary">15</div>
+                  <div className="text-sm text-muted-foreground">направлений</div>
                 </div>
               </div>
-              <div className="relative animate-scale-in">
-                <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl blur-2xl" />
+            </div>
+          </div>
+        </section>
+
+        <section id="about" className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                <h2 className="text-4xl md:text-5xl font-bold">О нашей студии</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  ArtStudio — это пространство, где рождается искусство. Мы обучаем рисованию с 2016 года, 
+                  помогая детям и взрослым раскрыть свой творческий потенциал.
+                </p>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Наши преподаватели — практикующие художники с профильным образованием, 
+                  которые создают атмосферу вдохновения и поддержки для каждого ученика.
+                </p>
+                <div className="grid grid-cols-2 gap-6 pt-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Users" className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold">Малые группы</div>
+                      <div className="text-sm text-muted-foreground">До 8 человек</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Award" className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold">Профессионалы</div>
+                      <div className="text-sm text-muted-foreground">Опытные художники</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Palette" className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold">Все материалы</div>
+                      <div className="text-sm text-muted-foreground">Включены в стоимость</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Heart" className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold">Атмосфера</div>
+                      <div className="text-sm text-muted-foreground">Уютная студия</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="relative">
                 <img
-                  src="https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/4810516f-fc49-431d-9721-b81e8bac01c3.jpg"
-                  alt="Букет цветов"
-                  className="relative rounded-3xl shadow-2xl w-full"
+                  src="https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/f6836e50-c804-4841-b51a-81c7ab085a58.jpg"
+                  alt="Студия изнутри"
+                  className="rounded-2xl shadow-2xl w-full"
                 />
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-accent rounded-2xl -z-10" />
               </div>
             </div>
           </div>
         </section>
 
-        <section id="about" className="py-20 bg-muted/30">
+        <section id="courses" className="py-20 bg-muted/30">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center space-y-6">
-              <h2 className="text-4xl font-bold">О нашем магазине</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Мы — команда флористов с 10-летним опытом, создающая уникальные цветочные композиции для особенных моментов. 
-                Каждый букет — это история, рассказанная языком цветов. Мы тщательно подбираем свежие цветы от лучших поставщиков 
-                и создаём композиции, которые вызывают эмоции и дарят радость.
-              </p>
-              <div className="grid md:grid-cols-3 gap-8 pt-8">
-                <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-                  <CardContent className="pt-6 text-center space-y-2">
-                    <Icon name="Sparkles" className="w-12 h-12 mx-auto text-primary" />
-                    <h3 className="text-xl font-semibold">Свежесть</h3>
-                    <p className="text-sm text-muted-foreground">Цветы доставляются прямо с плантаций</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-                  <CardContent className="pt-6 text-center space-y-2">
-                    <Icon name="Heart" className="w-12 h-12 mx-auto text-primary" />
-                    <h3 className="text-xl font-semibold">Забота</h3>
-                    <p className="text-sm text-muted-foreground">Индивидуальный подход к каждому заказу</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-                  <CardContent className="pt-6 text-center space-y-2">
-                    <Icon name="Award" className="w-12 h-12 mx-auto text-primary" />
-                    <h3 className="text-xl font-semibold">Качество</h3>
-                    <p className="text-sm text-muted-foreground">Только лучшие материалы и цветы</p>
-                  </CardContent>
-                </Card>
-              </div>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Наши курсы</h2>
+              <p className="text-lg text-muted-foreground">Выберите направление, которое вас вдохновляет</p>
             </div>
-          </div>
-        </section>
-
-        <section id="catalog" className="py-20">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12">Популярные букеты</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
-                  name: 'Нежность',
-                  price: '3 500₽',
-                  description: 'Розы, тюльпаны, лаванда',
-                  image: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/4810516f-fc49-431d-9721-b81e8bac01c3.jpg'
+                  name: 'Масляная живопись',
+                  duration: '3 месяца',
+                  description: 'Освойте технику масляной живописи, создавайте реалистичные картины',
+                  level: 'Для начинающих',
+                  price: '12 000₽/мес'
                 },
                 {
-                  name: 'Весенний сад',
-                  price: '4 200₽',
-                  description: 'Пионы, гортензии, эвкалипт',
-                  image: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/2bfbd799-a413-49b1-a36c-888f39b343fd.jpg'
+                  name: 'Акварель',
+                  duration: '2 месяца',
+                  description: 'Изучите акварельную технику, научитесь работать с цветом и светом',
+                  level: 'Все уровни',
+                  price: '10 000₽/мес'
                 },
                 {
-                  name: 'Романтика',
-                  price: '3 800₽',
-                  description: 'Розы, гвоздики, гипсофила',
-                  image: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/8e514910-6368-421b-89d6-335e89560445.jpg'
+                  name: 'Академический рисунок',
+                  duration: '4 месяца',
+                  description: 'Основы рисунка, перспектива, светотень, композиция',
+                  level: 'Базовый курс',
+                  price: '11 000₽/мес'
+                },
+                {
+                  name: 'Портрет',
+                  duration: '3 месяца',
+                  description: 'Научитесь рисовать портреты, изучите анатомию и пропорции лица',
+                  level: 'Средний уровень',
+                  price: '13 000₽/мес'
+                },
+                {
+                  name: 'Детская студия',
+                  duration: 'Постоянно',
+                  description: 'Развивающие занятия для детей 5-12 лет',
+                  level: 'Для детей',
+                  price: '8 000₽/мес'
+                },
+                {
+                  name: 'Пастель',
+                  duration: '2 месяца',
+                  description: 'Работа с пастелью, создание мягких и выразительных работ',
+                  level: 'Все уровни',
+                  price: '10 500₽/мес'
                 }
-              ].map((bouquet) => (
-                <Card key={bouquet.name} className="border-none shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 duration-300 overflow-hidden group">
-                  <div className="aspect-square overflow-hidden">
-                    <img 
-                      src={bouquet.image} 
-                      alt={bouquet.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                  <CardContent className="p-6 space-y-3">
-                    <h3 className="text-2xl font-semibold">{bouquet.name}</h3>
-                    <p className="text-muted-foreground">{bouquet.description}</p>
-                    <div className="flex items-center justify-between pt-2">
-                      <span className="text-2xl font-bold text-primary">{bouquet.price}</span>
-                      <Button size="sm" className="bg-primary hover:bg-primary/90">
-                        Заказать
-                      </Button>
+              ].map((course) => (
+                <Card key={course.name} className="border-none shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Icon name="Brush" className="w-6 h-6 text-primary" />
+                      </div>
+                      <span className="text-xs font-semibold px-3 py-1 bg-accent/20 text-accent-foreground rounded-full">
+                        {course.level}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2">{course.name}</h3>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                        <Icon name="Clock" className="w-4 h-4" />
+                        {course.duration}
+                      </div>
+                      <p className="text-muted-foreground">{course.description}</p>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold text-primary">{course.price}</span>
+                        <Button size="sm" onClick={() => scrollToSection('contacts')}>
+                          Записаться
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -193,45 +243,95 @@ export default function Index() {
           </div>
         </section>
 
-        <section id="gallery" className="py-20 bg-muted/30">
+        <section id="gallery" className="py-20 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12">Наши работы</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 1, 2, 3, 1, 2].map((idx, i) => (
-                <div key={i} className="aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-shadow">
-                  <img
-                    src={`https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/${
-                      idx === 1 ? '4810516f-fc49-431d-9721-b81e8bac01c3' : 
-                      idx === 2 ? '2bfbd799-a413-49b1-a36c-888f39b343fd' : 
-                      '8e514910-6368-421b-89d6-335e89560445'
-                    }.jpg`}
-                    alt={`Галерея ${i + 1}`}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  />
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Галерея работ</h2>
+              <p className="text-lg text-muted-foreground">Работы наших учеников</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { img: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/54e691b8-66ba-44f4-be1c-4fd4a3e2846f.jpg', title: 'Абстракция', author: 'Анна К.' },
+                { img: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/af1864e4-7c03-4209-be6a-f0e0ebc0c53d.jpg', title: 'Пейзаж', author: 'Дмитрий С.' },
+                { img: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/54e691b8-66ba-44f4-be1c-4fd4a3e2846f.jpg', title: 'Натюрморт', author: 'Елена М.' },
+                { img: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/af1864e4-7c03-4209-be6a-f0e0ebc0c53d.jpg', title: 'Портрет', author: 'Игорь П.' },
+                { img: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/54e691b8-66ba-44f4-be1c-4fd4a3e2846f.jpg', title: 'Акварель', author: 'Мария В.' },
+                { img: 'https://cdn.poehali.dev/projects/14bec77c-3211-4531-ae91-ee2287d1b7e3/files/af1864e4-7c03-4209-be6a-f0e0ebc0c53d.jpg', title: 'Масло', author: 'Алексей Р.' },
+              ].map((work, i) => (
+                <div key={i} className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300">
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={work.img}
+                      alt={work.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h3 className="text-white font-bold text-xl">{work.title}</h3>
+                    <p className="text-white/80 text-sm">{work.author}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="reviews" className="py-20">
+        <section id="teachers" className="py-20 bg-muted/30">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12">Отзывы клиентов</h2>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Наши преподаватели</h2>
+              <p className="text-lg text-muted-foreground">Практикующие художники с профильным образованием</p>
+            </div>
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {[
-                { name: 'Анна Петрова', text: 'Потрясающие букеты! Цветы свежие, композиция красивая. Заказываю уже не первый раз.', rating: 5 },
-                { name: 'Дмитрий Иванов', text: 'Отличный сервис и быстрая доставка. Букет превзошёл все ожидания, жена была в восторге!', rating: 5 },
-                { name: 'Елена Смирнова', text: 'Профессионалы своего дела. Помогли подобрать идеальный букет для свадьбы. Рекомендую!', rating: 5 }
+                { name: 'Екатерина Соколова', role: 'Художник-преподаватель', exp: '15 лет опыта', spec: 'Масляная живопись, портрет' },
+                { name: 'Андрей Морозов', role: 'Главный преподаватель', exp: '12 лет опыта', spec: 'Академический рисунок' },
+                { name: 'Ольга Волкова', role: 'Художник-акварелист', exp: '10 лет опыта', spec: 'Акварель, пастель' }
+              ].map((teacher) => (
+                <Card key={teacher.name} className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                  <CardContent className="pt-6 text-center space-y-4">
+                    <div className="w-32 h-32 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 rounded-full mx-auto flex items-center justify-center">
+                      <Icon name="User" className="w-16 h-16 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">{teacher.name}</h3>
+                      <p className="text-primary font-semibold text-sm">{teacher.role}</p>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                        <Icon name="Award" className="w-4 h-4" />
+                        {teacher.exp}
+                      </div>
+                      <p className="text-muted-foreground">{teacher.spec}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="reviews" className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Отзывы учеников</h2>
+              <p className="text-lg text-muted-foreground">Что говорят о нас</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {[
+                { name: 'Анна Петрова', text: 'Замечательная студия! За 3 месяца я научилась рисовать маслом. Преподаватели профессионалы, всё объясняют понятно.', rating: 5 },
+                { name: 'Дмитрий Иванов', text: 'Привёл дочь на детские занятия — она в восторге! Каждую неделю приносит новые работы. Спасибо преподавателям!', rating: 5 },
+                { name: 'Елена Смирнова', text: 'Всегда мечтала научиться рисовать. Здесь нашла то, что искала — профессионализм, атмосферу и результат!', rating: 5 }
               ].map((review) => (
                 <Card key={review.name} className="border-none shadow-lg">
                   <CardContent className="pt-6 space-y-4">
                     <div className="flex gap-1">
                       {[...Array(review.rating)].map((_, i) => (
-                        <Icon key={i} name="Star" className="w-5 h-5 fill-primary text-primary" />
+                        <Icon key={i} name="Star" className="w-5 h-5 fill-accent text-accent" />
                       ))}
                     </div>
-                    <p className="text-muted-foreground italic">"{review.text}"</p>
-                    <p className="font-semibold">{review.name}</p>
+                    <p className="text-muted-foreground italic leading-relaxed">"{review.text}"</p>
+                    <p className="font-bold">{review.name}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -239,116 +339,106 @@ export default function Index() {
           </div>
         </section>
 
-        <section id="team" className="py-20 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12">Наша команда</h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {[
-                { name: 'Мария Волкова', role: 'Главный флорист', experience: '12 лет опыта' },
-                { name: 'Ольга Соколова', role: 'Флорист-дизайнер', experience: '8 лет опыта' },
-                { name: 'Алексей Морозов', role: 'Флорист', experience: '6 лет опыта' }
-              ].map((member) => (
-                <Card key={member.name} className="border-none shadow-lg text-center">
-                  <CardContent className="pt-6 space-y-3">
-                    <div className="w-32 h-32 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full mx-auto flex items-center justify-center">
-                      <Icon name="User" className="w-16 h-16 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-semibold">{member.name}</h3>
-                    <p className="text-primary font-medium">{member.role}</p>
-                    <p className="text-sm text-muted-foreground">{member.experience}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section id="delivery" className="py-20">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12">Доставка</h2>
-            <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-8">
-                <Card className="border-none shadow-lg">
-                  <CardContent className="pt-6 space-y-4">
-                    <Icon name="Truck" className="w-12 h-12 text-primary" />
-                    <h3 className="text-2xl font-semibold">Быстрая доставка</h3>
-                    <p className="text-muted-foreground">
-                      Доставляем по Москве в день заказа. Доставка в другие города — 1-2 дня.
-                    </p>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• По Москве — от 500₽</li>
-                      <li>• За МКАД — от 800₽</li>
-                      <li>• Регионы — расчёт индивидуально</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-                <Card className="border-none shadow-lg">
-                  <CardContent className="pt-6 space-y-4">
-                    <Icon name="Clock" className="w-12 h-12 text-primary" />
-                    <h3 className="text-2xl font-semibold">Режим работы</h3>
-                    <p className="text-muted-foreground">
-                      Мы работаем без выходных, чтобы ваши цветы были всегда свежими.
-                    </p>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• Понедельник - Пятница: 9:00 - 21:00</li>
-                      <li>• Суббота - Воскресенье: 10:00 - 20:00</li>
-                      <li>• Срочная доставка в течение 2 часов</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </section>
 
         <section id="contacts" className="py-20 bg-muted/30">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12">Свяжитесь с нами</h2>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Запишитесь на пробное занятие</h2>
+              <p className="text-lg text-muted-foreground">Первое занятие — бесплатно!</p>
+            </div>
             <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-              <div className="space-y-6">
-                <h3 className="text-2xl font-semibold">Наши контакты</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <Icon name="MapPin" className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium">Адрес</p>
-                      <p className="text-muted-foreground">г. Москва, ул. Цветочная, д. 15</p>
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-2xl font-bold mb-6">Контактная информация</h3>
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon name="MapPin" className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Адрес студии</p>
+                        <p className="text-muted-foreground">г. Москва, ул. Художественная, д. 42</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon name="Phone" className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Телефон</p>
+                        <p className="text-muted-foreground">+7 (495) 789-12-34</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon name="Mail" className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Email</p>
+                        <p className="text-muted-foreground">info@artstudio.ru</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon name="Clock" className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Режим работы</p>
+                        <p className="text-muted-foreground">Пн-Пт: 10:00 - 21:00</p>
+                        <p className="text-muted-foreground">Сб-Вс: 11:00 - 19:00</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <Icon name="Phone" className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium">Телефон</p>
-                      <p className="text-muted-foreground">+7 (495) 123-45-67</p>
+                </div>
+                <div className="pt-6 border-t">
+                  <h3 className="text-xl font-bold mb-4">Мы в социальных сетях</h3>
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                      <Icon name="Instagram" className="w-6 h-6 text-primary" />
                     </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <Icon name="Mail" className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">info@flowershop.ru</p>
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                      <Icon name="Facebook" className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                      <Icon name="Send" className="w-6 h-6 text-primary" />
                     </div>
                   </div>
                 </div>
               </div>
-              <Card className="border-none shadow-lg">
+              <Card className="border-none shadow-xl">
                 <CardContent className="pt-6">
-                  <form className="space-y-4">
+                  <form className="space-y-5">
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Ваше имя</label>
-                      <Input placeholder="Введите имя" />
+                      <label className="text-sm font-semibold mb-2 block">Ваше имя</label>
+                      <Input placeholder="Иван Иванов" className="h-12" />
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Телефон</label>
-                      <Input placeholder="+7 (___) ___-__-__" />
+                      <label className="text-sm font-semibold mb-2 block">Телефон</label>
+                      <Input placeholder="+7 (999) 123-45-67" className="h-12" />
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Сообщение</label>
-                      <Textarea placeholder="Расскажите о вашем заказе" rows={4} />
+                      <label className="text-sm font-semibold mb-2 block">Выберите курс</label>
+                      <select className="w-full h-12 px-3 rounded-md border border-input bg-background">
+                        <option>Масляная живопись</option>
+                        <option>Акварель</option>
+                        <option>Академический рисунок</option>
+                        <option>Портрет</option>
+                        <option>Детская студия</option>
+                        <option>Пастель</option>
+                      </select>
                     </div>
-                    <Button className="w-full bg-primary hover:bg-primary/90" size="lg">
-                      Отправить заявку
+                    <div>
+                      <label className="text-sm font-semibold mb-2 block">Комментарий</label>
+                      <Textarea placeholder="Расскажите о себе и своём опыте" rows={4} />
+                    </div>
+                    <Button className="w-full h-12 text-lg" size="lg">
+                      <Icon name="Send" className="w-5 h-5 mr-2" />
+                      Записаться на занятие
                     </Button>
+                    <p className="text-xs text-center text-muted-foreground">
+                      Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+                    </p>
                   </form>
                 </CardContent>
               </Card>
@@ -357,32 +447,54 @@ export default function Index() {
         </section>
       </main>
 
-      <footer className="bg-foreground text-background py-12">
+      <footer className="bg-secondary text-secondary-foreground py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Flower Shop</h3>
-              <p className="text-sm opacity-80">Цветы, которые дарят радость</p>
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                  <Icon name="Palette" className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold">ArtStudio</h3>
+              </div>
+              <p className="text-sm opacity-90">
+                Изобразительная студия для детей и взрослых
+              </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Навигация</h4>
-              <div className="space-y-2 text-sm opacity-80">
-                <p className="cursor-pointer hover:opacity-100" onClick={() => scrollToSection('catalog')}>Каталог</p>
-                <p className="cursor-pointer hover:opacity-100" onClick={() => scrollToSection('delivery')}>Доставка</p>
-                <p className="cursor-pointer hover:opacity-100" onClick={() => scrollToSection('contacts')}>Контакты</p>
+              <h4 className="font-bold mb-4">Навигация</h4>
+              <div className="space-y-2 text-sm opacity-90">
+                <p className="cursor-pointer hover:opacity-100 transition-opacity" onClick={() => scrollToSection('about')}>О студии</p>
+                <p className="cursor-pointer hover:opacity-100 transition-opacity" onClick={() => scrollToSection('courses')}>Курсы</p>
+                <p className="cursor-pointer hover:opacity-100 transition-opacity" onClick={() => scrollToSection('gallery')}>Галерея</p>
+                <p className="cursor-pointer hover:opacity-100 transition-opacity" onClick={() => scrollToSection('teachers')}>Преподаватели</p>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Социальные сети</h4>
-              <div className="flex gap-4 justify-center md:justify-start">
-                <Icon name="Instagram" className="w-6 h-6 cursor-pointer hover:opacity-80" />
-                <Icon name="Facebook" className="w-6 h-6 cursor-pointer hover:opacity-80" />
-                <Icon name="Twitter" className="w-6 h-6 cursor-pointer hover:opacity-80" />
+              <h4 className="font-bold mb-4">Контакты</h4>
+              <div className="space-y-2 text-sm opacity-90">
+                <p>+7 (495) 789-12-34</p>
+                <p>info@artstudio.ru</p>
+                <p>ул. Художественная, 42</p>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Мы в соцсетях</h4>
+              <div className="flex gap-3">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                  <Icon name="Instagram" className="w-5 h-5" />
+                </div>
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                  <Icon name="Facebook" className="w-5 h-5" />
+                </div>
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+                  <Icon name="Send" className="w-5 h-5" />
+                </div>
               </div>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-background/20 text-center text-sm opacity-80">
-            © 2024 Flower Shop. Все права защищены.
+          <div className="mt-8 pt-8 border-t border-primary/10 text-center text-sm opacity-80">
+            © 2024 ArtStudio. Все права защищены.
           </div>
         </div>
       </footer>
