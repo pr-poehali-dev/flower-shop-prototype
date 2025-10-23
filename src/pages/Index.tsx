@@ -7,6 +7,27 @@ import Icon from '@/components/ui/icon';
 
 export default function Index() {
   const [activeSection, setActiveSection] = useState('home');
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const downloadPDF = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch('https://functions.poehali.dev/218f1a56-5530-4977-87fb-1b83e32d3eeb');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'flower-shop-prototype.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
@@ -20,7 +41,17 @@ export default function Index() {
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-primary">Flower Shop</h1>
-            <div className="hidden md:flex gap-6">
+            <div className="hidden md:flex gap-6 items-center">
+              <Button 
+                onClick={downloadPDF} 
+                disabled={isDownloading}
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Icon name={isDownloading ? 'Loader2' : 'Download'} className={`w-4 h-4 ${isDownloading ? 'animate-spin' : ''}`} />
+                {isDownloading ? 'Загрузка...' : 'Скачать PDF'}
+              </Button>
               {['home', 'about', 'catalog', 'gallery', 'reviews', 'team', 'delivery', 'contacts'].map((section) => (
                 <button
                   key={section}
